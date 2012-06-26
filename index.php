@@ -17,7 +17,8 @@
 	}
 
 	require_once 'Libs/simple_html_dom.php';
-
-	$parser = new UmiConverter('annabellshopru');
-	var_dump($parser->getData());
+    $Update1 = new MyUMI('annabellshopru');
+    $Update1->setProducts();
+    $Update2 = new MyUMI('mdmarketru');
+    $Update2->setProducts();
 ?>
