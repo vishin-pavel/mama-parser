@@ -13,6 +13,11 @@ class ParserAbstract implements ParserInterface
 	protected $products = array();
 	protected $domainName;
 
+	public function __construct()
+	{
+
+	}
+
 	protected function request($urlParams)
 	{
 		/**

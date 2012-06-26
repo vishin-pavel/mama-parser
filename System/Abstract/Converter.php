@@ -1,5 +1,5 @@
 <?php
-class ConverterAbstract
+class ConverterAbstract implements ConverterInterface
 {
 	protected $parser;
 

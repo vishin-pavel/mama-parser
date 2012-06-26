@@ -5,7 +5,6 @@ class annabellshopruParser extends ParserAbstract
 	 * Массив адресов.
 	 */
 	private $urlList;
-	private $domainName;
 
 	public function __construct()
 	{
@@ -274,9 +273,9 @@ class annabellshopruParser extends ParserAbstract
 			$htmlDOM = $this->request($url);
 			$vmMainPage = $htmlDOM->find('#vmMainPage');
 			$div = $vmMainPage[0]->find('div'); $div = $div[2];
-			if($div-find('ul')){ $ul = $div-find('ul'); $ul[0]->outertext = '';}
-			if($div-find('br')){ $br = $div-find('br'); $br[0]->outertext = ''; if($br[1]){$br[1]->outertext = '';}}
-			if($div-find('form')){ $form = $div-find('form'); $form[0]->outertext = '';}
+			if($div->find('ul')){ $ul = $div->find('ul'); $ul[0]->outertext = '';}
+			if($div->find('br')){ $br = $div->find('br'); $br[0]->outertext = ''; if(count($br)>1){$br[1]->outertext = '';}}
+			if($div->find('form')){ $form = $div->find('form'); $form[0]->outertext = '';}
 			$pageCount = trim($div->innertext); $pageCount = explode(' ', $pageCount); $pageCount = $pageCount[5] + 20;
 
 			$htmlDOM = $this->request($url.'&limitstart=0&limit='.$pageCount);
