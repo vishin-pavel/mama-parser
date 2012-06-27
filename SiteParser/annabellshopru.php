@@ -239,8 +239,16 @@ class annabellshopruParser extends ParserAbstract
 				2 => '/our-shop.html?page=shop.browse&category_id=235', // Трикотаж Наша Мама
 			)
 		);
-		// $this->countUrl($this->urlList);
+		$this->countUrl($this->urlList);
 		$this->products = $this->getParsedUrlList($this->urlList);
+
+		ob_start();
+		var_dump($this->products);
+		$products = ob_get_contents();
+		ob_end_clean();
+		$arrayFile = fopen('annabellshop.array', 'w');
+		fwrite($arrayFile, $products);
+		fclose($arrayFile);
 	}
 
 	// execute after develop
@@ -265,9 +273,8 @@ class annabellshopruParser extends ParserAbstract
 	{
 		$pageList = array(); //массив страниц
 
-			for($i = 0; $i < count($urlList); $i++)
+			foreach($urlList as $i => $url)
 			{
-				$url = $urlList[$i];
 				if(is_string($url))
 				{
 					$pageList[$i] = $this->parsingPageList($url);
@@ -290,7 +297,7 @@ class annabellshopruParser extends ParserAbstract
 
 			$htmlDOM = $this->request($url);
 			$logFile = fopen('annabellshop.log', 'w');
-			fwrite($logFile, 'category>>> '.$url."\r\n");
+			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\r\n".'category>>> '.$url."\r\n");
 			fclose($logFile);
 
 			$vmMainPage = $htmlDOM->find('#vmMainPage');

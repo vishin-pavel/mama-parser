@@ -2,10 +2,10 @@
 header("Content-type: text/html; charset=utf-8");
 function __autoload($classname) {
 	$possibilities = array(
-		'/^\w+Parser$/' => 'SiteParser/'.strtolower(str_replace('Parser', '', $classname)).'.php',
-		'/^\w+Converter$/' => 'DataConverter/'.strtolower(str_replace('Converter', '', $classname)).'.php',
-		'/^\w+Interface$/' => 'System/Interfaces/'.strtolower(str_replace('Interface', '', $classname)).'.php',
-		'/^\w+Abstract$/' => 'System/Abstract/'.strtolower(str_replace('Abstract', '', $classname)).'.php'
+		'/^\w+Parser$/' => dirname(__FILE__).'/SiteParser/'.strtolower(str_replace('Parser', '', $classname)).'.php',
+		'/^\w+Converter$/' => dirname(__FILE__).'/DataConverter/'.strtolower(str_replace('Converter', '', $classname)).'.php',
+		'/^\w+Interface$/' => dirname(__FILE__).'/System/Interfaces/'.strtolower(str_replace('Interface', '', $classname)).'.php',
+		'/^\w+Abstract$/' => dirname(__FILE__).'/System/Abstract/'.strtolower(str_replace('Abstract', '', $classname)).'.php'
 	);
 	foreach ($possibilities as $regexp => $path){
 		if (preg_match($regexp, $classname) == 1) {
@@ -17,7 +17,7 @@ function __autoload($classname) {
 	}
 }
 
-require_once 'Libs/simple_html_dom.php';
+require_once dirname(__FILE__).'/Libs/simple_html_dom.php';
 //include "standalone.php";
 
 $Update1 = new UmiConverter(array('annabellshopru'));
