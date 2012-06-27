@@ -6,8 +6,7 @@
  * Time: 16:17
  * To change this template use File | Settings | File Templates.
  */
-header("Content-type: text/html; charset=utf-8");
-include "standalone.php";
+
 include "Product.php";
 include "SetterForUMI.php";
 

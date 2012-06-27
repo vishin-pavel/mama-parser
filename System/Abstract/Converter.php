@@ -5,13 +5,10 @@ class ConverterAbstract
 
 	public function __construct()
 	{
-
-	}
-
-	protected function changeParser($parserName)
-	{
-		$parserClassName = $parserName.'Parser';
-		$this->parser = new $parserClassName();
+		foreach($parserNameList as $i => $parserName){
+			$parserClassName = $parserName.'Parser';
+			$this->parser[$parserName] = new $parserClassName();
+		}
 	}
 }
 ?>
