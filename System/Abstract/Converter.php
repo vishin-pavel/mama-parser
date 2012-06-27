@@ -1,14 +1,19 @@
 <?php
-class ConverterAbstract
+class ConverterAbstract implements ConverterInterface
 {
 	protected $parser;
 
-	public function __construct()
+	public function __construct($parserNameList)
 	{
-		foreach($parserNameList as $i => $parserName){
+		foreach($parserNameList as $parserName){
 			$parserClassName = $parserName.'Parser';
 			$this->parser[$parserName] = new $parserClassName();
 		}
+	}
+
+	public function setProducts()
+	{
+		
 	}
 }
 ?>

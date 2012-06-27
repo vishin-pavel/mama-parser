@@ -239,8 +239,26 @@ class annabellshopruParser extends ParserAbstract
 				2 => '/our-shop.html?page=shop.browse&category_id=235', // Трикотаж Наша Мама
 			)
 		);
-
+		// $this->countUrl($this->urlList);
 		$this->products = $this->getParsedUrlList($this->urlList);
+	}
+
+	// execute after develop
+	private function countUrl($urlList)
+	{
+		// Рассчитывается сколько урлов есть вообще.
+		for($i = 0; $i < count($urlList); $i++)
+		{
+			$url = $urlList[$i];
+			if(is_string($url))
+			{
+				$this->recordCount++;
+			}
+			else if(is_array($url))
+			{
+				$pageList[$i] = $this->countUrl($url);
+			}
+		}
 	}
 
 	private function getParsedUrlList($urlList)
@@ -271,12 +289,16 @@ class annabellshopruParser extends ParserAbstract
 		$productList = array(); // Список продуктов.
 
 			$htmlDOM = $this->request($url);
+			$logFile = fopen('annabellshop.log', 'w');
+			fwrite($logFile, 'category>>> '.$url."\r\n");
+			fclose($logFile);
+
 			$vmMainPage = $htmlDOM->find('#vmMainPage');
 			$div = $vmMainPage[0]->find('div'); $div = $div[2];
 			if($div->find('ul')){ $ul = $div->find('ul'); $ul[0]->outertext = '';}
 			if($div->find('br')){ $br = $div->find('br'); $br[0]->outertext = ''; if(count($br)>1){$br[1]->outertext = '';}}
 			if($div->find('form')){ $form = $div->find('form'); $form[0]->outertext = '';}
-			$pageCount = trim($div->innertext); $pageCount = explode(' ', $pageCount); $pageCount = $pageCount[5] + 20;
+			$pageCount = trim($div->innertext); $pageCount = explode(' ', $pageCount); $pageCount = count($pageCount) == 6 ? $pageCount[5] + 20 : 2;
 
 			$htmlDOM = $this->request($url.'&limitstart=0&limit='.$pageCount);
 
@@ -285,8 +307,10 @@ class annabellshopruParser extends ParserAbstract
 					$td = $section->find('td');
 					if($td){
 						$a = $td[0]->find('a');
-						$product = $this->parsingPage($a[0]->href);
-						array_push($productList, $product);
+						if(!preg_match("/garden_flypage.tpl/", $a[0]->href)){
+							$product = $this->parsingPage($a[0]->href);
+							array_push($productList, $product);
+						}
 					}
 				}
 			}else{
@@ -302,6 +326,9 @@ class annabellshopruParser extends ParserAbstract
 		// @param url параметры ссылки на веб страницу
 
 			$htmlDOM = $this->request($url);
+			$logFile = fopen('annabellshop.log', 'a');
+			fwrite($logFile, 'product>>> '.$url."\r\n");
+			fclose($logFile);
 
 			if($htmlDOM->find('.pathway'))
 			{
@@ -311,7 +338,7 @@ class annabellshopruParser extends ParserAbstract
 				$td = $tr[0]->find('td');
 				$imageUrl = $td[0]->find('.s5_vm_img'); $imageUrl = $imageUrl[0]->find('a'); $imageUrl = $imageUrl[0]->href;
 				$h1 = $htmlDOM->find('h1'); $h1 = $h1[0]->innertext;
-				$price = $tr[1]->find('.productPrice'); $price = $price->innertext; $price = floatval($price);
+				$price = $tr[1]->find('.productPrice'); $price = $price[0]->innertext; $price = floatval($price);
 				$description = $tr[3]->find('td'); $hr = $description[0]->find('hr'); $hr[0]->outertext = ''; $description = $description[0]->innertext;
 
 				$product = array(
@@ -321,7 +348,7 @@ class annabellshopruParser extends ParserAbstract
 					'productPrice' => $price
 				);
 			}else{
-				return;
+				return null;
 			}
 
 		return $product;
