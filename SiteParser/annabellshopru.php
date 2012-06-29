@@ -241,9 +241,9 @@ class annabellshopruParser extends ParserAbstract
 		);*/
 
 		//$this->countUrl($this->urlList);
-		/*
+
 		$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
-		$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);*/
+		$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);
 
 		//$arr = $this->getParsedUrlList($this->urlList);
 		//$logFile = fopen(dirname(__FILE__).'/annabellshop.array', 'a');
@@ -253,10 +253,6 @@ class annabellshopruParser extends ParserAbstract
 		//ob_clean();
 		//fwrite($logFile, $arr1);
 		//fclose($logFile);
-
-		$arr = file_get_contents(dirname(__FILE__).'/annabellshop.array');
-
-		$this->products = eval($arr);
 	}
 
 	// execute after develop
