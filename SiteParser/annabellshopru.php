@@ -242,13 +242,7 @@ class annabellshopruParser extends ParserAbstract
 		$this->countUrl($this->urlList);
 		$this->products = $this->getParsedUrlList($this->urlList);
 
-		ob_start();
-		var_dump($this->products);
-		$products = ob_get_contents();
-		ob_end_clean();
-		$arrayFile = fopen('annabellshop.array', 'w');
-		fwrite($arrayFile, $products);
-		fclose($arrayFile);
+		echo '>>>>>>>>>>All good<<<<<<<<<<<!';
 	}
 
 	// execute after develop
@@ -296,8 +290,8 @@ class annabellshopruParser extends ParserAbstract
 		$productList = array(); // Список продуктов.
 
 			$htmlDOM = $this->request($url);
-			$logFile = fopen('annabellshop.log', 'w');
-			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\r\n".'category>>> '.$url."\r\n");
+			$logFile = fopen(dirname(__FILE__).'/annabellshop.log', 'w');
+			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\n".'category>>> '.$url);
 			fclose($logFile);
 
 			$vmMainPage = $htmlDOM->find('#vmMainPage');
@@ -305,37 +299,50 @@ class annabellshopruParser extends ParserAbstract
 			if($div->find('ul')){ $ul = $div->find('ul'); $ul[0]->outertext = '';}
 			if($div->find('br')){ $br = $div->find('br'); $br[0]->outertext = ''; if(count($br)>1){$br[1]->outertext = '';}}
 			if($div->find('form')){ $form = $div->find('form'); $form[0]->outertext = '';}
-			$pageCount = trim($div->innertext); $pageCount = explode(' ', $pageCount); $pageCount = count($pageCount) == 6 ? $pageCount[5] + 20 : 2;
+			$pageCount = trim($div->innertext); $pageCount = explode(' ', $pageCount); $pageCount = count($pageCount) == 6 ? $pageCount[5] + 10 : 2;
 
 			$htmlDOM = $this->request($url.'&limitstart=0&limit='.$pageCount);
+			$i = 0;
 
-			if($htmlDOM->find('.sectiontableheader')){
-				foreach($htmlDOM->find('.sectiontableentry1,.sectiontableentry1') as $section){
+			if($htmlDOM->find('.sectiontableheader'))
+			{
+				$rc = new RollingCurl();
+				$rc->window_size = 2;
+
+				foreach($htmlDOM->find('.sectiontableentry1,.sectiontableentry2') as $section){
 					$td = $section->find('td');
 					if($td){
 						$a = $td[0]->find('a');
 						if(!preg_match("/garden_flypage.tpl/", $a[0]->href)){
-							$product = $this->parsingPage($a[0]->href);
-							array_push($productList, $product);
+							$rc->get($this->domainName.$a[0]->href);
+							$i++;
 						}
 					}
 				}
+
+				if(0 < $i){
+					$productListHtmlType = $rc->execute();
+
+					foreach($productListHtmlType as $productHtmlType){
+						$product = $this->parsingPage($productHtmlType);
+						$productList[]=$product;
+					}
+				}
 			}else{
-				// Ошибка, парсер не может найти элемент .sectiontableheader
+				throw new Exception('Парсер не может найти элемент .sectiontableheader на странице '.$url);
 			}
 
 		return $productList;
 	}
 
-	private function parsingPage($url)
+	private function parsingPage($html)
 	{
 		// Метод реализующий парсинг страницы продукта.
-		// @param url параметры ссылки на веб страницу
+		// @param html веб страница продукта
+		// return массив распарсенных данных продукта.
 
-			$htmlDOM = $this->request($url);
-			$logFile = fopen('annabellshop.log', 'a');
-			fwrite($logFile, 'product>>> '.$url."\r\n");
-			fclose($logFile);
+			$htmlDOM = new simple_html_dom();
+			$htmlDOM->load($html);
 
 			if($htmlDOM->find('.pathway'))
 			{
@@ -345,7 +352,7 @@ class annabellshopruParser extends ParserAbstract
 				$td = $tr[0]->find('td');
 				$imageUrl = $td[0]->find('.s5_vm_img'); $imageUrl = $imageUrl[0]->find('a'); $imageUrl = $imageUrl[0]->href;
 				$h1 = $htmlDOM->find('h1'); $h1 = $h1[0]->innertext;
-				$price = $tr[1]->find('.productPrice'); $price = $price[0]->innertext; $price = floatval($price);
+				$price = $tr[1]->find('.productPrice'); if(!$price[0]){exit($tr[1]->outertext);} $price = $price[0]->innertext; $price = trim($price);
 				$description = $tr[3]->find('td'); $hr = $description[0]->find('hr'); $hr[0]->outertext = ''; $description = $description[0]->innertext;
 
 				$product = array(
@@ -355,7 +362,7 @@ class annabellshopruParser extends ParserAbstract
 					'productPrice' => $price
 				);
 			}else{
-				return null;
+				return 'null - not <product> info';
 			}
 
 		return $product;

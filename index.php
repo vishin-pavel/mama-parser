@@ -7,5 +7,6 @@
 	<body>
 		<!-- <button id="run">Запустить парсер</button> -->
 		<a href="/run.php">Запустить парсер</a>
+                <?= dirname(__FILE__); ?>
 	</body>
 </html>
