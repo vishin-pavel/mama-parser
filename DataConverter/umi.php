@@ -117,14 +117,14 @@ class UmiConverter extends ConverterAbstract
                     $annabellshopruData[1][2][5], // Фито - подгузники Sun-Herbal Сан Хербал
                     $annabellshopruData[1][2][6], // Японские подгузники GOON Гун
                     $annabellshopruData[1][2][7], // Японские подгузники MERRIES Мериес
-                    $annabellshopruData[1][2][8], // Японские подгузники MOONY Муни
-                    $annabellshopruData[8][0],    // Трикотаж Lucky child (Лаки Чайлд)
-                    $annabellshopruData[8][1],    // Трикотаж Лео
-                    $annabellshopruData[8][2]    // Трикотаж Наша Мама
+                    $annabellshopruData[1][2][8] // Японские подгузники MOONY Муни
+                    //$annabellshopruData[8][0],    // Трикотаж Lucky child (Лаки Чайлд)
+                    //$annabellshopruData[8][1],    // Трикотаж Лео
+                    //$annabellshopruData[8][2]    // Трикотаж Наша Мама
                 ),
                 1 => array(),
                 2 => array()
-            ),
+            ));/*,
             1 => array(
                 0 => array(
                     $annabellshopruData[5][4],     // Мобиле / Подвески / Дуги
@@ -188,7 +188,7 @@ class UmiConverter extends ConverterAbstract
                 $annabellshopruData[4][10]   // Сумки - переноски
 
             )
-        );
+        );*/
         $this->convert($changeProductList, $sectionList);
     }
 }

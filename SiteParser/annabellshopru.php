@@ -239,9 +239,19 @@ class annabellshopruParser extends ParserAbstract
 				2 => '/our-shop.html?page=shop.browse&category_id=235', // Трикотаж Наша Мама
 			)
 		);*/
-		//$this->countUrl($this->urlList);
+
+		$this->countUrl($this->urlList);/*
 		$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
-		$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);
+		$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);*/
+
+		$arr = $this->getParsedUrlList($this->urlList);
+		$logFile = fopen(dirname(__FILE__).'/annabellshop.array', 'w');
+		ob_start();
+		var_export($arr);
+		$arr1 = ob_get_contents();
+		ob_clean();
+		fwrite($logFile, $arr1);
+		fclose($logFile);
 	}
 
 	// execute after develop
@@ -340,6 +350,8 @@ class annabellshopruParser extends ParserAbstract
 		// @param html веб страница продукта
 		// return массив распарсенных данных продукта.
 
+		$product = array();
+
 			$htmlDOM = new simple_html_dom();
 			$htmlDOM->load($html);
 
@@ -360,8 +372,6 @@ class annabellshopruParser extends ParserAbstract
 					'productDescription' => $description,
 					'productPrice' => $price
 				);
-			}else{
-				return 'null - not <product> info';
 			}
 
 		return $product;
