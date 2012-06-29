@@ -13,6 +13,7 @@ class UmiConverter extends ConverterAbstract
 		parent::__construct($parserNameList);
 	}
 
+
     private function convert($changeProductList, $sectionList)
 	{
         //Получаем иерархический тип страници
@@ -25,7 +26,7 @@ class UmiConverter extends ConverterAbstract
                  for($k=0;$k<count($changeProductList[$i][$j]);$k++){
                      foreach($changeProductList[$i][$j][$k] as $product){
 
-                         if($product!= null){
+                         if(count($product)>0){
 
                              $hierarchy = umiHierarchy::getInstance();
                              $parentId = $hierarchy->getIdByPath($sectionList[$i][$j]);
