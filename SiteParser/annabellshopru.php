@@ -241,8 +241,6 @@ class annabellshopruParser extends ParserAbstract
 		);*/
 		$this->countUrl($this->urlList);
 		$this->products = $this->getParsedUrlList($this->urlList);
-
-		echo '>>>>>>>>>>All good<<<<<<<<<<<!';
 	}
 
 	// execute after develop
