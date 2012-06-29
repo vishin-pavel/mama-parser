@@ -1,6 +1,6 @@
 <?php
 header("Content-type: text/html; charset=utf-8");
-function __autoload($classname) {
+spl_autoload_register(function ($classname) {
 	$possibilities = array(
 		'/^\w+Parser$/' => dirname(__FILE__).'/SiteParser/'.strtolower(str_replace('Parser', '', $classname)).'.php',
 		'/^\w+Converter$/' => dirname(__FILE__).'/DataConverter/'.strtolower(str_replace('Converter', '', $classname)).'.php',
@@ -15,7 +15,7 @@ function __autoload($classname) {
 			}
 		}
 	}
-}
+});
 
 require_once dirname(__FILE__).'/Libs/simple_html_dom.php';
 require_once dirname(__FILE__).'/Libs/RollingCurl.php';
