@@ -64,7 +64,7 @@ class RollingCurl {
      * as a DOS attack. Increase this window_size if you are making requests
      * to multiple servers or have permission from the receving server admins.
      */
-    private $window_size = 5;
+    public $window_size = 5;
 
     /**
      * @var float

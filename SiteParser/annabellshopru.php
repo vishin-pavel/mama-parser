@@ -48,7 +48,7 @@ class annabellshopruParser extends ParserAbstract
 					7 => '/our-shop.html?page=shop.browse&amp;category_id=213', // Японские подгузники MERRIES Мериес
 					8 => '/our-shop.html?page=shop.browse&amp;category_id=212' // Японские подгузники MOONY Муни
 				)
-			),
+			));/*,
 			2 => array( // ДЕТСКОЕ ПИТАНИЕ
 				0 => '/our-shop.html?page=shop.browse&amp;category_id=81', // Детская вода
 				1 => array( // Детские каши
@@ -238,7 +238,7 @@ class annabellshopruParser extends ParserAbstract
 				1 => '/our-shop.html?page=shop.browse&category_id=274', // Трикотаж Лео
 				2 => '/our-shop.html?page=shop.browse&category_id=235', // Трикотаж Наша Мама
 			)
-		);
+		);*/
 		$this->countUrl($this->urlList);
 		$this->products = $this->getParsedUrlList($this->urlList);
 
