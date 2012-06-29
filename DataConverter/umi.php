@@ -22,15 +22,15 @@ class UmiConverter extends ConverterAbstract
         $hierarchyTypeId = $hierarchyType->getId();
 
         for($i=0;$i<count($changeProductList);$i++){
-            echo  "вошел раз";
+            echo  "вошел раз ";
             for($j=0;$j<count($changeProductList[$i]);$j++){
-                echo  "вошел два";
+                echo  "вошел два ";
                  for($k=0;$k<count($changeProductList[$i][$j]);$k++){
-                     echo  "вошел три";
+                     echo  "вошел три ";
                      foreach($changeProductList[$i][$j][$k] as $product){
-                         echo  "начал добавлять";
+                         echo  "начал добавлять ";
                          if(count($product)>0){
-                             echo  "работает";
+                             echo  "работает ";
                              $hierarchy = umiHierarchy::getInstance();
                              $parentId = $hierarchy->getIdByPath($sectionList[$i][$j]);
                              $name = $product['productName'];
