@@ -22,12 +22,15 @@ class UmiConverter extends ConverterAbstract
         $hierarchyTypeId = $hierarchyType->getId();
 
         for($i=0;$i<count($changeProductList);$i++){
+            echo  "вошел раз";
             for($j=0;$j<count($changeProductList[$i]);$j++){
+                echo  "вошел два";
                  for($k=0;$k<count($changeProductList[$i][$j]);$k++){
+                     echo  "вошел три";
                      foreach($changeProductList[$i][$j][$k] as $product){
-
+                         echo  "начал добавлять";
                          if(count($product)>0){
-
+                             echo  "работает";
                              $hierarchy = umiHierarchy::getInstance();
                              $parentId = $hierarchy->getIdByPath($sectionList[$i][$j]);
                              $name = $product['productName'];
@@ -39,7 +42,7 @@ class UmiConverter extends ConverterAbstract
                              $newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
                              if($newElementId === false)
                              {
-                                 //echo "Не удалось создать новую страницу";
+                                 echo "Не удалось создать новую страницу";
                              }
 
                              //Установим права на страницу в состояние "по умолчанию"
@@ -64,10 +67,10 @@ class UmiConverter extends ConverterAbstract
                                  $newElement->commit();
 
                                  //Покажем адрес новой страницы
-                                 //echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
+                                 echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
                              } else
                              {
-                                 //echo "Не удалось получить экземпляр страницы #{$newElementId}.";
+                                 echo "Не удалось получить экземпляр страницы #{$newElementId}.";
                              }
                          }
 
@@ -103,7 +106,7 @@ class UmiConverter extends ConverterAbstract
         );
 
         $annabellshopruData = $this->parser['annabellshopru']->getData();
-
+                        var_export($annabellshopruData);
 		// Таблица соответсвий разделов.
         $changeProductList = array(
             0 => array( // Одежда
