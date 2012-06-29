@@ -1,6 +1,6 @@
 <?php
 header("Content-type: text/html; charset=utf-8");
-spl_autoload_register(function ($classname) {
+function autoload ($classname) {
 	$possibilities = array(
 		'/^\w+Parser$/' => dirname(__FILE__).'/SiteParser/'.strtolower(str_replace('Parser', '', $classname)).'.php',
 		'/^\w+Converter$/' => dirname(__FILE__).'/DataConverter/'.strtolower(str_replace('Converter', '', $classname)).'.php',
@@ -15,12 +15,13 @@ spl_autoload_register(function ($classname) {
 			}
 		}
 	}
-});
+}
 
+spl_autoload_register('autoload');
 require_once dirname(__FILE__).'/Libs/simple_html_dom.php';
 require_once dirname(__FILE__).'/Libs/RollingCurl.php';
-//include "standalone.php";
+include "standalone.php";
 
 $Update1 = new UmiConverter(array('annabellshopru'));
-//$Update1->setProducts();
+$Update1->setProducts();
 ?>
