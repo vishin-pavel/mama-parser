@@ -239,8 +239,9 @@ class annabellshopruParser extends ParserAbstract
 				2 => '/our-shop.html?page=shop.browse&category_id=235', // Трикотаж Наша Мама
 			)
 		);*/
-		$this->countUrl($this->urlList);
-		$this->products = $this->getParsedUrlList($this->urlList);
+		//$this->countUrl($this->urlList);
+		$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
+		$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);
 	}
 
 	// execute after develop
