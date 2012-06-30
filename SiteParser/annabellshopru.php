@@ -240,7 +240,7 @@ class annabellshopruParser extends ParserAbstract
 			)
 		);
 
-		//$this->countUrl($this->urlList);
+		$this->countUrl($this->urlList);
 
 		//$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
 		//$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);
@@ -304,7 +304,6 @@ class annabellshopruParser extends ParserAbstract
 		// @param url параметры ссылки на веб страницу
 
 		$productList = array(); // Список продуктов.
-
 			$htmlDOM = $this->request($url);
 			$logFile = fopen(dirname(__FILE__).'/annabellshop.log', 'w');
 			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\n".'category>>> '.$url);
