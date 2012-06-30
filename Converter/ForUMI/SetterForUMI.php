@@ -26,11 +26,26 @@ class SetterForUMI extends Setter implements SetProducts
                 {
                     $hierarchy = umiHierarchy::getInstance();
                     $parentId = $hierarchy->getIdByPath($product->GetParentCatalog());
+
+                    //Создаем и подготавливаем выборку
+                    $sel = new umiSelection;
+                    $sel->addElementType($hierarchyTypeId); //Добавляет поиск по иерархическому типу
+                    $sel->addHierarchyFilter($parentId); //Устанавливаем поиск по разделу
+                    $sel->addPermissions(); //Говорим, что обязательно нужно учитывать права доступа
+
+                    //Получаем результаты
+                    $result = umiSelectionsParser::runSelection($sel); //Массив id объектов
+                    $total = umiSelectionsParser::runSelectionCounts($sel); //Количество записей
                     $name = $product->GetProductName();
                     $image = $product->GetProductImage();
                     $descr = $product->GetProductDescr();
                     $price = $product->GetProductPrice();
 
+                    foreach($result as $prodId){
+                        $prod = $hierarchy->getElement($prodId);
+
+
+                    }
                     // Добавляем новый элемент
                     $newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
                     if($newElementId === false)
