@@ -80,10 +80,7 @@ class UmiConverter extends ConverterAbstract
 			foreach($changeProductList as $parserName => $url)
 			{
 				if(is_string($url)){
-					$productList = $this->parser['annabellshopru']->parsingPageList($url);
-					if($productList){
-						$this->convert($productList, $section, $parserName);
-					}
+					$this->convert($url, $section, $parserName);
 				}else if(is_array($url)){
 					$this->converting($url, $section[$parserName]);
 				}
