@@ -31,7 +31,7 @@ class UmiConverter extends ConverterAbstract
 		foreach($parsedProductList as $product){
 			if(count($product)>0){
 				$hierarchy = umiHierarchy::getInstance();
-				$parentId = $hierarchy->getIdByPath($sectionList[$i][$j]);
+				$parentId = $hierarchy->getIdByPath($section);
 				$name = $product['productName'];
 				$image = $product['productImage'];
 				$descr = $product['productDescription'];
