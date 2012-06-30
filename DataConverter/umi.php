@@ -14,74 +14,83 @@ class UmiConverter extends ConverterAbstract
 	}
 
 
-    private function convert($changeProductList, $sectionList)
+    private function convert($productList, $section, $parserName)
 	{
+		// @param Url каталога любого сайта
+		// @param Url каталога сайта mamakupi
+		// @param Имя парсера
+
+
         //Получаем иерархический тип страници
         $hierarchyTypes = umiHierarchyTypesCollection::getInstance();
         $hierarchyType = $hierarchyTypes->getTypeByName("catalog", "object");
         $hierarchyTypeId = $hierarchyType->getId();
 
-        for($i=0;$i<count($changeProductList);$i++){
-            echo  "вошел раз ";
-            for($j=0;$j<count($changeProductList[$i]);$j++){
-                echo  "вошел два ";
-                 for($k=0;$k<count($changeProductList[$i][$j]);$k++){
-                     echo  "вошел три ";
-                     foreach($changeProductList[$i][$j][$k] as $product){
-                         echo  "начал добавлять ";
-                         if(count($product)>0){
-                             echo  "работает ";
-                             $hierarchy = umiHierarchy::getInstance();
-                             $parentId = $hierarchy->getIdByPath($sectionList[$i][$j]);
-                             $name = $product['productName'];
-                             $image = $product['productImage'];
-                             $descr = $product['productDescription'];
-                             $price = $product['productPrice'];
+		$parsedProductList = $this->parser[$parserName]->parsingPageList($productList);
 
-                             // Добавляем новый элемент
-                             $newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
-                             if($newElementId === false)
-                             {
-                                 echo "Не удалось создать новую страницу";
-                             }
+		foreach($parsedProductList as $product){
+			if(count($product)>0){
+				$hierarchy = umiHierarchy::getInstance();
+				$parentId = $hierarchy->getIdByPath($sectionList[$i][$j]);
+				$name = $product['productName'];
+				$image = $product['productImage'];
+				$descr = $product['productDescription'];
+				$price = $product['productPrice'];
 
-                             //Установим права на страницу в состояние "по умолчанию"
-                             $permissions = permissionsCollection::getInstance();
-                             $permissions->setDefaultPermissions($newElementId);
+				// Добавляем новый элемент
+				$newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
+				if($newElementId === false)
+				{
+					echo "Не удалось создать новую страницу";
+				}
 
-                             //Получим экземпляр страницы
-                             $newElement = $hierarchy->getElement($newElementId);
-                             if($newElement instanceof umiHierarchyElement)
-                             {
-                                 //Заполним новую страницу свойствами
-                                 $newElement->setValue("title", $name);
-                                 $newElement->setValue("h1", $name);
-                                 $newElement->setValue("photo", $image);
-                                 $newElement->setValue("description", $descr);
-                                 $newElement->setValue("price", $price);
+				//Установим права на страницу в состояние "по умолчанию"
+				$permissions = permissionsCollection::getInstance();
+				$permissions->setDefaultPermissions($newElementId);
 
-                                 //Укажем, что страница является активной
-                                 $newElement->setIsActive(true);
+				//Получим экземпляр страницы
+				$newElement = $hierarchy->getElement($newElementId);
+				if($newElement instanceof umiHierarchyElement)
+				{
+					//Заполним новую страницу свойствами
+					$newElement->setValue("title", $name);
+					$newElement->setValue("h1", $name);
+					$newElement->setValue("photo", $image);
+					$newElement->setValue("description", $descr);
+					$newElement->setValue("price", $price);
 
-                                 //Подтвердим внесенные изменения
-                                 $newElement->commit();
+					//Укажем, что страница является активной
+					$newElement->setIsActive(true);
 
-                                 //Покажем адрес новой страницы
-                                 echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
-                             } else
-                             {
-                                 echo "Не удалось получить экземпляр страницы #{$newElementId}.";
-                             }
-                         }
+					//Подтвердим внесенные изменения
+					$newElement->commit();
 
-                     }
-                 }
-            }
+					//Покажем адрес новой страницы
+					echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
+				} else
+				{
+					echo "Не удалось получить экземпляр страницы #{$newElementId}.";
+				}
+			}
+		}
+	}
 
-        }
-    }
+	private function converting($changeProductList, $section)
+	{
+			foreach($changeProductList as $parserName => $url)
+			{
+				if(is_string($url)){
+					$productList = $this->parser['annabellshopru']->parsingPageList($url);
+					if($productList){
+						$this->convert($productList, $section, $parserName);
+					}
+				}else if(is_array($url)){
+					$this->converting($url, $section[$parserName]);
+				}
+			}
+	}
 
-    public function setProducts()
+	public function setProducts()
 	{
         $sectionList = array(
             0 => array(
@@ -105,99 +114,98 @@ class UmiConverter extends ConverterAbstract
             5 => '/shop/tovary_dlya_mam_i_pap/'
         );
 
-        $annabellshopruData = $this->parser['annabellshopru']->getData();
-                        var_export($annabellshopruData);
+        $annabellshopruData = $this->parser['annabellshopru']->getUrlList();
+
 		// Таблица соответсвий разделов.
         $changeProductList = array(
             0 => array( // Одежда
                 0 => array( // Одежда для самых маленьких.
-                    $annabellshopruData[1][0],     // Пеленки / клеёнки
-                    $annabellshopruData[1][1][0], // Трусики MERRIES
-                    $annabellshopruData[1][1][1], // Трусики GOON
-                    $annabellshopruData[1][1][2], // Трусики Huggies Хаггис
-                    $annabellshopruData[1][1][3], // Трусики Libero Либеро
-                    $annabellshopruData[1][1][4], // Трусики Pampers Памперс
-                    $annabellshopruData[1][1][5], // Трусики непромокаемые
-                    $annabellshopruData[1][2][0], // Подгузники Huggies Хаггис
-                    $annabellshopruData[1][2][1], // Подгузники Royal Pups Роял Пупс
-                    $annabellshopruData[1][2][2], // Подгузники Libero Либеро
-                    $annabellshopruData[1][2][3], // Подгузники Pampers Памперс
-                    $annabellshopruData[1][2][4], // Подгузники Prokids
-                    $annabellshopruData[1][2][5], // Фито - подгузники Sun-Herbal Сан Хербал
-                    $annabellshopruData[1][2][6], // Японские подгузники GOON Гун
-                    $annabellshopruData[1][2][7], // Японские подгузники MERRIES Мериес
-                    $annabellshopruData[1][2][8] // Японские подгузники MOONY Муни
-                    //$annabellshopruData[8][0],    // Трикотаж Lucky child (Лаки Чайлд)
-                    //$annabellshopruData[8][1],    // Трикотаж Лео
-                    //$annabellshopruData[8][2]    // Трикотаж Наша Мама
+                    'annabellshopru' => $annabellshopruData[1][0],     // Пеленки / клеёнки
+                    'annabellshopru' => $annabellshopruData[1][1][0], // Трусики MERRIES
+                    'annabellshopru' => $annabellshopruData[1][1][1], // Трусики GOON
+                    'annabellshopru' => $annabellshopruData[1][1][2], // Трусики Huggies Хаггис
+                    'annabellshopru' => $annabellshopruData[1][1][3], // Трусики Libero Либеро
+                    'annabellshopru' => $annabellshopruData[1][1][4], // Трусики Pampers Памперс
+                    'annabellshopru' => $annabellshopruData[1][1][5], // Трусики непромокаемые
+                    'annabellshopru' => $annabellshopruData[1][2][0], // Подгузники Huggies Хаггис
+                    'annabellshopru' => $annabellshopruData[1][2][1], // Подгузники Royal Pups Роял Пупс
+                    'annabellshopru' => $annabellshopruData[1][2][2], // Подгузники Libero Либеро
+                    'annabellshopru' => $annabellshopruData[1][2][3], // Подгузники Pampers Памперс
+                    'annabellshopru' => $annabellshopruData[1][2][4], // Подгузники Prokids
+                    'annabellshopru' => $annabellshopruData[1][2][5], // Фито - подгузники Sun-Herbal Сан Хербал
+                    'annabellshopru' => $annabellshopruData[1][2][6], // Японские подгузники GOON Гун
+                    'annabellshopru' => $annabellshopruData[1][2][7], // Японские подгузники MERRIES Мериес
+                    'annabellshopru' => $annabellshopruData[1][2][8], // Японские подгузники MOONY Муни
+                    'annabellshopru' => $annabellshopruData[8][0],    // Трикотаж Lucky child (Лаки Чайлд)
+                    'annabellshopru' => $annabellshopruData[8][1],    // Трикотаж Лео
+                    'annabellshopru' => $annabellshopruData[8][2]    // Трикотаж Наша Мама
                 ),
                 1 => array(),
                 2 => array()
-            ));/*,
+            ),
             1 => array(
                 0 => array(
-                    $annabellshopruData[5][4],     // Мобиле / Подвески / Дуги
-                    $annabellshopruData[5][12]    // Развивающие коврики и центры
+                    'annabellshopru' => $annabellshopruData[5][4],     // Мобиле / Подвески / Дуги
+                    'annabellshopru' => $annabellshopruData[5][12]    // Развивающие коврики и центры
                 ),
                 1 => array(
-                    $annabellshopruData[5][0],     // ВЕЛОСИПЕДЫ
-                    $annabellshopruData[5][1],     // Игрушки - сортеры
-                    $annabellshopruData[5][2],     // Игрушки для ванной
-                    $annabellshopruData[5][3],     // Мир кукол RUBENS BARN
-                    $annabellshopruData[5][5],     // Мягкие игрушки
-                    $annabellshopruData[5][6],     // Мягкие игрушки ZOOBIES
-                    $annabellshopruData[5][8],     // Песочные наборы / Машинки
-                    $annabellshopruData[5][9],     // Погремушки и прорезыватели
-                    $annabellshopruData[5][13]     // ЭЛЕКТРОМОБИЛИ
+                    'annabellshopru' => $annabellshopruData[5][0],     // ВЕЛОСИПЕДЫ
+                    'annabellshopru' => $annabellshopruData[5][1],     // Игрушки - сортеры
+                    'annabellshopru' => $annabellshopruData[5][2],     // Игрушки для ванной
+                    'annabellshopru' => $annabellshopruData[5][3],     // Мир кукол RUBENS BARN
+                    'annabellshopru' => $annabellshopruData[5][5],     // Мягкие игрушки
+                    'annabellshopru' => $annabellshopruData[5][6],     // Мягкие игрушки ZOOBIES
+                    'annabellshopru' => $annabellshopruData[5][8],     // Песочные наборы / Машинки
+                    'annabellshopru' => $annabellshopruData[5][9],     // Погремушки и прорезыватели
+                    'annabellshopru' => $annabellshopruData[5][13]     // ЭЛЕКТРОМОБИЛИ
 
                 ),
                 2 => array(
-                    $annabellshopruData[5][10],    // Развивающие игрушки
-                    $annabellshopruData[5][11]    // Развивающие игрушки МЯКИШИ
+                    'annabellshopru' => $annabellshopruData[5][10],    // Развивающие игрушки
+                    'annabellshopru' => $annabellshopruData[5][11]    // Развивающие игрушки МЯКИШИ
                 ),
                 3 => array(),
                 4 => array(
-                    $annabellshopruData[5][7]      // Пазлы, книжки, настольные игры, лото, панно
+                    'annabellshopru' => $annabellshopruData[5][7]      // Пазлы, книжки, настольные игры, лото, панно
                 )
             ),
             2 => array(),
             3 => array(
-                $annabellshopruData[7][0],    // Для мытья посуды/игрушек/пола
-                $annabellshopruData[7][1],    // Кондиционер для белья
-                $annabellshopruData[7][2],    // Отбеливатели
-                $annabellshopruData[7][3]    // Стиральные порошки
+                'annabellshopru' => $annabellshopruData[7][0],    // Для мытья посуды/игрушек/пола
+                'annabellshopru' => $annabellshopruData[7][1],    // Кондиционер для белья
+                'annabellshopru' => $annabellshopruData[7][2],    // Отбеливатели
+                'annabellshopru' => $annabellshopruData[7][3]    // Стиральные порошки
             ),
             4 => array(
-                $annabellshopruData[0][0],   // Крем
-                $annabellshopruData[0][1],   // Молочко/Масло/Лосьон
-                $annabellshopruData[0][2],   // Мыло
-                $annabellshopruData[0][3],   // Купание детей
-                $annabellshopruData[0][4],   // Присыпка
-                $annabellshopruData[0][5][0], // Детская влажная туалетная бумага
-                $annabellshopruData[0][5][1], // Салфетки бумажные
-                $annabellshopruData[0][5][2], // Салфетки влажные
-                $annabellshopruData[0][6],    // Защита от солнца и комаров
-                $annabellshopruData[0][7],    // Гигиенические помады
-                $annabellshopruData[6][0],    // Детские ванночки
-                $annabellshopruData[6][1],    // Детские полотенца
-                $annabellshopruData[6][2]    // Принадлежности для купания
+                'annabellshopru' => $annabellshopruData[0][0],   // Крем
+                'annabellshopru' => $annabellshopruData[0][1],   // Молочко/Масло/Лосьон
+                'annabellshopru' => $annabellshopruData[0][2],   // Мыло
+                'annabellshopru' => $annabellshopruData[0][3],   // Купание детей
+                'annabellshopru' => $annabellshopruData[0][4],   // Присыпка
+                'annabellshopru' => $annabellshopruData[0][5][0], // Детская влажная туалетная бумага
+                'annabellshopru' => $annabellshopruData[0][5][1], // Салфетки бумажные
+                'annabellshopru' => $annabellshopruData[0][5][2], // Салфетки влажные
+                'annabellshopru' => $annabellshopruData[0][6],    // Защита от солнца и комаров
+                'annabellshopru' => $annabellshopruData[0][7],    // Гигиенические помады
+                'annabellshopru' => $annabellshopruData[6][0],    // Детские ванночки
+                'annabellshopru' => $annabellshopruData[6][1],    // Детские полотенца
+                'annabellshopru' => $annabellshopruData[6][2]    // Принадлежности для купания
             ),
             5 => array(
-                $annabellshopruData[4][0],   // Аксессуары для мам
-                $annabellshopruData[4][1],   // Бандажи
-                $annabellshopruData[4][2],   // Белье
-                $annabellshopruData[4][3],   // Гигиена груди
-                $annabellshopruData[4][4],   // Гигиена тела
-                $annabellshopruData[4][5],   // Косметика для мам
-                $annabellshopruData[4][6],   // Медицина - товары для здоровья
-                $annabellshopruData[4][7],   // Молокоотсосы
-                $annabellshopruData[4][8][0],   // Вода для здоровья
-                $annabellshopruData[4][8][1],   // Чаи и коктейли
-                $annabellshopruData[4][9],   // Сбор и хранение грудного молока
-                $annabellshopruData[4][10]   // Сумки - переноски
-
+                'annabellshopru' => $annabellshopruData[4][0],   // Аксессуары для мам
+                'annabellshopru' => $annabellshopruData[4][1],   // Бандажи
+                'annabellshopru' => $annabellshopruData[4][2],   // Белье
+                'annabellshopru' => $annabellshopruData[4][3],   // Гигиена груди
+                'annabellshopru' => $annabellshopruData[4][4],   // Гигиена тела
+                'annabellshopru' => $annabellshopruData[4][5],   // Косметика для мам
+                'annabellshopru' => $annabellshopruData[4][6],   // Медицина - товары для здоровья
+                'annabellshopru' => $annabellshopruData[4][7],   // Молокоотсосы
+                'annabellshopru' => $annabellshopruData[4][8][0],   // Вода для здоровья
+                'annabellshopru' => $annabellshopruData[4][8][1],   // Чаи и коктейли
+                'annabellshopru' => $annabellshopruData[4][9],   // Сбор и хранение грудного молока
+                'annabellshopru' => $annabellshopruData[4][10]   // Сумки - переноски
             )
-        );*/
-        $this->convert($changeProductList, $sectionList);
+        );
+        $this->converting($changeProductList, $sectionList);
     }
 }

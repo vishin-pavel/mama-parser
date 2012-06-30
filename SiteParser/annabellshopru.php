@@ -48,7 +48,7 @@ class annabellshopruParser extends ParserAbstract
 					7 => '/our-shop.html?page=shop.browse&amp;category_id=213', // Японские подгузники MERRIES Мериес
 					8 => '/our-shop.html?page=shop.browse&amp;category_id=212' // Японские подгузники MOONY Муни
 				)
-			));/*,
+			),
 			2 => array( // ДЕТСКОЕ ПИТАНИЕ
 				0 => '/our-shop.html?page=shop.browse&amp;category_id=81', // Детская вода
 				1 => array( // Детские каши
@@ -238,21 +238,27 @@ class annabellshopruParser extends ParserAbstract
 				1 => '/our-shop.html?page=shop.browse&category_id=274', // Трикотаж Лео
 				2 => '/our-shop.html?page=shop.browse&category_id=235', // Трикотаж Наша Мама
 			)
-		);*/
+		);
 
 		//$this->countUrl($this->urlList);
 
-		$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
-		$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);
+		//$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
+		//$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);
 
 		//$arr = $this->getParsedUrlList($this->urlList);
-		//$logFile = fopen(dirname(__FILE__).'/annabellshop.array', 'a');
+
 		//ob_start();
 		//var_export($arr);
 		//$arr1 = ob_get_contents();
 		//ob_clean();
+		//$logFile = fopen(dirname(__FILE__).'/annabellshop.array', 'w');
 		//fwrite($logFile, $arr1);
 		//fclose($logFile);
+	}
+
+	public function getUrlList()
+	{
+		return $this->urlList;
 	}
 
 	// execute after develop
@@ -292,7 +298,7 @@ class annabellshopruParser extends ParserAbstract
 		return $pageList;
 	}
 
-	private function parsingPageList($url)
+	public function parsingPageList($url)
 	{
 		// Метод реализующий парсинг страницы где список продуктов.
 		// @param url параметры ссылки на веб страницу
@@ -338,6 +344,7 @@ class annabellshopruParser extends ParserAbstract
 						$productList[]=$product;
 					}
 				}
+
 			}else{
 				throw new Exception('Парсер не может найти элемент .sectiontableheader на странице '.$url);
 			}
@@ -374,6 +381,9 @@ class annabellshopruParser extends ParserAbstract
 					'productPrice' => $price
 				);
 			}
+
+
+			unset($htmlDOM);
 
 		return $product;
 	}
