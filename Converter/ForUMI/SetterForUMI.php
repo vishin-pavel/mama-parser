@@ -6,13 +6,22 @@
  * Time: 15:33
  * To change this template use File | Settings | File Templates.
  */
-class SetterForUMI extends Setter implements SetProducts
+class SetterForUMI
 {
+    //Свойства
+    protected $productsForSet;
+
+    //SET Методы
+    protected function Set($productsForSet)
+    {
+        $this->productsForSet=$productsForSet;
+    }
+
     //Конструктор
     function __construct($productsArray)
-        {
-            parent:: __construct($productsArray);
-        }
+    {
+        $this->Set($productsArray);
+    }
 
     //Методы
     public function SetProducts()
@@ -40,26 +49,40 @@ class SetterForUMI extends Setter implements SetProducts
                     $image = $product->GetProductImage();
                     $descr = $product->GetProductDescr();
                     $price = $product->GetProductPrice();
+                    $allRight=true;
 
                     foreach($result as $prodId){
                         $prod = $hierarchy->getElement($prodId);
+                        if($name==$prod->getValue("h1")){
+                           echo "Такой продукт уже существует, ";
+                           if($descr!=$prod->getValue("description")){
+                               echo "описание обнавлено, ";
+                               $prod->setValue("description", $descr);
 
+                           }
+                           if($price!=$prod->getValue("price")){
+                               echo "цена обнавлена. ";
+                               $prod->setValue("price", $price);
 
+                           }
+                           $allRight=false;
+                        }
                     }
-                    // Добавляем новый элемент
-                    $newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
-                    if($newElementId === false)
+                    if($allRight){
+                        // Добавляем новый элемент
+                        $newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
+                        if($newElementId === false)
                         {
-                            //echo "Не удалось создать новую страницу";
+                            echo "Не удалось создать новую страницу";
                         }
 
-                    //Установим права на страницу в состояние "по умолчанию"
-                    $permissions = permissionsCollection::getInstance();
-                    $permissions->setDefaultPermissions($newElementId);
+                        //Установим права на страницу в состояние "по умолчанию"
+                        $permissions = permissionsCollection::getInstance();
+                        $permissions->setDefaultPermissions($newElementId);
 
-                    //Получим экземпляр страницы
-                    $newElement = $hierarchy->getElement($newElementId);
-                    if($newElement instanceof umiHierarchyElement)
+                        //Получим экземпляр страницы
+                        $newElement = $hierarchy->getElement($newElementId);
+                        if($newElement instanceof umiHierarchyElement)
                         {
                             //Заполним новую страницу свойствами
                             $newElement->setValue("title", $name);
@@ -75,11 +98,13 @@ class SetterForUMI extends Setter implements SetProducts
                             $newElement->commit();
 
                             //Покажем адрес новой страницы
-                            //echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
+                            echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
                         } else
-                            {
-                                //echo "Не удалось получить экземпляр страницы #{$newElementId}.";
-                            }
+                        {
+                            echo "Не удалось получить экземпляр страницы #{$newElementId}.";
+                        }
+                    }
+
                 };
         }
 }

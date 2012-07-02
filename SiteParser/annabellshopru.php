@@ -308,7 +308,7 @@ class annabellshopruParser extends ParserAbstract
 			$logFile = fopen(dirname(__FILE__).'/annabellshop.log', 'w');
 			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\n".'category>>> '.$url);
 			fclose($logFile);
-
+            exit($htmlDOM->outertext);
 			$vmMainPage = $htmlDOM->find('#vmMainPage');
 			$div = $vmMainPage[0]->find('div'); $div = $div[2];
 			if($div->find('ul')){ $ul = $div->find('ul'); $ul[0]->outertext = '';}
