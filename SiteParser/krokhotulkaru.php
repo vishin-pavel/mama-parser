@@ -81,7 +81,7 @@ class krokhotulkaruParser extends ParserAbstract
 		// @param url параметры ссылки на веб страницу
 
 		$productList = array(); // Список продуктов.
-
+echo("parsingPageList >>>>> start\n");
 			$logFile = fopen(dirname(__FILE__).'/krokhotulka.log', 'w');
 			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\n".'category>>> '.$url."\n");
 			fclose($logFile);
@@ -90,10 +90,10 @@ class krokhotulkaruParser extends ParserAbstract
 			$i = 0;
 
 			if($htmlDOM->find('.objects')){
-
+echo("new RollingCurl >>>>> start\n");
 				$rc = new RollingCurl();
-				$rc->window_size = 4;
-
+				$rc->window_size = 10;
+echo("new RollingCurl >>>>> ok\n");
 				foreach($htmlDOM->find('.object') as $section){
 					$a = $section->find('a');
 					if($a){
@@ -101,23 +101,26 @@ class krokhotulkaruParser extends ParserAbstract
 						if($link{0} != '/'){
 							$link = '/'.$link;
 						}
+echo("RollingCurl::get() >>>>> start\n");
 						$rc->get($this->domainName.$link);
 						$i++;
+echo("RollingCurl::get() >>>>> ok\n");
 					}
 				}
 
 				if(0 < $i){
+echo("RollingCurl::execute() >>>>> start\n");
 					$productListHtmlType = $rc->execute();
-
+echo("RollingCurl::execute() >>>>> ok\n");
 					foreach($productListHtmlType as $productHtmlType){
-						$product = $this->parsingPage($productHtmlType);
+						$product = $this->parsingPage($productHtmlType['page']);
 						$productList[]=$product;
 					}
 				}
 			}else{
-				throw new Exception('Парсер не может найти элемент .b-item на странице '.$url);
+				throw new Exception('Парсер не может найти элемент .objects на странице '.$url);
 			}
-
+echo("parsingPageList >>>>> ok\n");
 		return $productList;
 	}
 
@@ -128,7 +131,6 @@ class krokhotulkaruParser extends ParserAbstract
 		// return массив распарсенных данных продукта.
 
 		$product = array();
-
 			$htmlDOM = new simple_html_dom();
 			$htmlDOM->load($html);
 
@@ -136,7 +138,7 @@ class krokhotulkaruParser extends ParserAbstract
 			{
 				$imageUrlf = $htmlDOM->find('#bigPhotoDiv');
 				$imageUrlf = $imageUrlf[0]->find('img');
-				if($imageUrlf[0]->find('img')){
+				if($imageUrlf[0]->src){
 					$imageUrl = $imageUrlf[0]->src;
 				}else{
 					$imageUrl = '';
@@ -144,7 +146,7 @@ class krokhotulkaruParser extends ParserAbstract
 
 
 				$h1f = $htmlDOM->find('h1');
-				if($htmlDOM->find('h1')){
+				if($h1f[0]->innertext){
 					$h1 = strip_tags($h1f[0]->innertext);
 				}else{
 					$h1 = 'Без названия';
@@ -152,17 +154,15 @@ class krokhotulkaruParser extends ParserAbstract
 
 				$pricef = $htmlDOM->find('.info');
 				$pricef = $pricef[0]->find('span');
-				if($pricef[0]->find('span')){
+				if($pricef[0]->innertext){
 					$price = trim(strip_tags($pricef[0]->innertext));
 				}else{
 					$price = '0';
 				}
 
-
-
 				$descriptionf = $htmlDOM->find('.note');
 				$descriptionf = $descriptionf[0]->find('div');
-				if($descriptionf[0]->find('div')){
+				if($descriptionf[0]->innertext){
 					$description = $descriptionf[0]->innertext;
 				}else{
 					$description = 'Без описания';
@@ -177,7 +177,6 @@ class krokhotulkaruParser extends ParserAbstract
 			}
 
 			unset($htmlDOM);
-
 		return $product;
 	}
 }

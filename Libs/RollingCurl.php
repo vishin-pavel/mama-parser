@@ -240,7 +240,12 @@ class RollingCurl {
             }
         }
         else
-            return array($output);
+            return array(
+				array(
+					'page' => $output,
+					'url' => $request->url
+				)
+			);
         return true;
     }
 
@@ -293,13 +298,17 @@ class RollingCurl {
                 $info = curl_getinfo($done['handle']);
                 $output = curl_multi_getcontent($done['handle']);
 
-				$HtmlList[] = $output;
+				$key = (string) $done['handle'];
+                $request = $this->requests[$this->requestMap[$key]];
+
+				$HtmlList[] = array(
+					'page' => $output,
+					'url' => $request->url
+				);
 
                 // send the return values to the callback function.
                 $callback = $this->callback;
                 if (is_callable($callback)) {
-                    $key = (string) $done['handle'];
-                    $request = $this->requests[$this->requestMap[$key]];
                     unset($this->requestMap[$key]);
                     call_user_func($callback, $output, $info, $request);
                 }
@@ -326,7 +335,9 @@ class RollingCurl {
                 curl_multi_select($master, $this->timeout);
 
         } while ($running);
+
         curl_multi_close($master);
+
         return $HtmlList;
     }
 
