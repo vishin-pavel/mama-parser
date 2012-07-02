@@ -171,6 +171,8 @@ class UmiConverter extends ConverterAbstract
                     'annabellshopru' => $annabellshopruData[8][0],    // Трикотаж Lucky child (Лаки Чайлд)
                     'annabellshopru' => $annabellshopruData[8][1],    // Трикотаж Лео
                     'annabellshopru' => $annabellshopruData[8][2]    // Трикотаж Наша Мама
+
+
                 ),
                 1 => array(),
                 2 => array()
