@@ -32,6 +32,12 @@ class UmiConverter extends ConverterAbstract
 			if(count($product)>0){
 				$hierarchy = umiHierarchy::getInstance();
 				$parentId = $hierarchy->getIdByPath($section);
+                $name = $product['productName'];
+                $image = $product['productImage'];
+                $descr = $product['productDescription'];
+                $price = $product['productPrice'];
+
+//Update......................................................................................
                 //Создаем и подготавливаем выборку
                 $sel = new umiSelection;
                 $sel->addElementType($hierarchyTypeId); //Добавляет поиск по иерархическому типу
@@ -43,10 +49,7 @@ class UmiConverter extends ConverterAbstract
                 //$total = umiSelectionsParser::runSelectionCounts($sel); //Количество записей
                 $allRight=true;
 
-                $name = $product['productName'];
-				$image = $product['productImage'];
-				$descr = $product['productDescription'];
-				$price = $product['productPrice'];
+
 
                 foreach($result as $prodId){
                     $prod = $hierarchy->getElement($prodId);
@@ -65,6 +68,7 @@ class UmiConverter extends ConverterAbstract
                         $allRight=false;
                     }
                 }
+//Update......................................................................................
 
                 if($allRight){
                     // Добавляем новый элемент
