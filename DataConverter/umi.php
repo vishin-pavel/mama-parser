@@ -32,45 +32,80 @@ class UmiConverter extends ConverterAbstract
 			if(count($product)>0){
 				$hierarchy = umiHierarchy::getInstance();
 				$parentId = $hierarchy->getIdByPath($section);
-				$name = $product['productName'];
-				$image = $product['productImage'];
-				$descr = $product['productDescription'];
-				$price = $product['productPrice'];
+                $name = $product['productName'];
+                $image = $product['productImage'];
+                $descr = $product['productDescription'];
+                $price = $product['productPrice'];
 
-				// Добавляем новый элемент
-				$newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
-				if($newElementId === false)
-				{
-					echo "Не удалось создать новую страницу";
-				}
+//Update......................................................................................
+                //Создаем и подготавливаем выборку
+                $sel = new umiSelection;
+                $sel->addElementType($hierarchyTypeId); //Добавляет поиск по иерархическому типу
+                $sel->addHierarchyFilter($parentId); //Устанавливаем поиск по разделу
+                $sel->addPermissions(); //Говорим, что обязательно нужно учитывать права доступа
 
-				//Установим права на страницу в состояние "по умолчанию"
-				$permissions = permissionsCollection::getInstance();
-				$permissions->setDefaultPermissions($newElementId);
+                //Получаем результаты
+                $result = umiSelectionsParser::runSelection($sel); //Массив id объектов
+                //$total = umiSelectionsParser::runSelectionCounts($sel); //Количество записей
+                $allRight=true;
 
-				//Получим экземпляр страницы
-				$newElement = $hierarchy->getElement($newElementId);
-				if($newElement instanceof umiHierarchyElement)
-				{
-					//Заполним новую страницу свойствами
-					$newElement->setValue("title", $name);
-					$newElement->setValue("h1", $name);
-					$newElement->setValue("photo", $image);
-					$newElement->setValue("description", $descr);
-					$newElement->setValue("price", $price);
 
-					//Укажем, что страница является активной
-					$newElement->setIsActive(true);
 
-					//Подтвердим внесенные изменения
-					$newElement->commit();
+                foreach($result as $prodId){
+                    $prod = $hierarchy->getElement($prodId);
+                    if($name==$prod->getValue("h1")){
+                        echo "Продукт {$name} уже существует, ";
+                        if($descr!=$prod->getValue("description")){
+                            echo "Описание продукта {$name} обнавлено, ";
+                            $prod->setValue("description", $descr);
 
-					//Покажем адрес новой страницы
-					echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
-				} else
-				{
-					echo "Не удалось получить экземпляр страницы #{$newElementId}.";
-				}
+                        }
+                        if($price!=$prod->getValue("price")){
+                            echo "Цена продукта {$name} обнавлена. ";
+                            $prod->setValue("price", $price);
+
+                        }
+                        $allRight=false;
+                    }
+                }
+//Update......................................................................................
+
+                if($allRight){
+                    // Добавляем новый элемент
+                    $newElementId = $hierarchy->addElement($parentId, $hierarchyTypeId, $name, $name);
+                    if($newElementId === false)
+                    {
+                        echo "Не удалось создать новую страницу";
+                    }
+
+                    //Установим права на страницу в состояние "по умолчанию"
+                    $permissions = permissionsCollection::getInstance();
+                    $permissions->setDefaultPermissions($newElementId);
+
+                    //Получим экземпляр страницы
+                    $newElement = $hierarchy->getElement($newElementId);
+                    if($newElement instanceof umiHierarchyElement)
+                    {
+                        //Заполним новую страницу свойствами
+                        $newElement->setValue("title", $name);
+                        $newElement->setValue("h1", $name);
+                        $newElement->setValue("photo", $image);
+                        $newElement->setValue("description", $descr);
+                        $newElement->setValue("price", $price);
+
+                        //Укажем, что страница является активной
+                        $newElement->setIsActive(true);
+
+                        //Подтвердим внесенные изменения
+                        $newElement->commit();
+
+                        //Покажем адрес новой страницы
+                        echo "Успешно создана страница с адресом: \"", $hierarchy->getPathById($newElementId), "\"";
+                    } else
+                    {
+                        echo "Не удалось получить экземпляр страницы #{$newElementId}.";
+                    }
+                }
 			}
 		}
 	}
