@@ -12,7 +12,6 @@ class skazka16ruParser extends ParserAbstract
 
 		$this->domainName = 'skazka16.ru';
 
-		// TODO: Составить список разделов.
 		$this->urlList = array(
 			0 => array( // Одежда
 				0 => '/index.php?categoryID=89', // Наряды
@@ -64,7 +63,7 @@ class skazka16ruParser extends ParserAbstract
 			7 => '/index.php?categoryID=109' // Средства гигиены
 		);
 		$this->countUrl($this->urlList);
-
+/*
 		$arr = $this->getParsedUrlList($this->urlList);
 
 		ob_start();
@@ -74,6 +73,7 @@ class skazka16ruParser extends ParserAbstract
 		$logFile = fopen(dirname(__FILE__).'/skazka16.array', 'w');
 		fwrite($logFile, $arr1);
 		fclose($logFile);
+ */
 	}
 
 	// TODO: execute after develop
@@ -124,7 +124,7 @@ class skazka16ruParser extends ParserAbstract
 			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\n".'category>>> '.$url."\n");
 			fclose($logFile);
 
-			$htmlDOM = $this->request($url);
+			$htmlDOM = $this->request($url.'&show_all=yes');
 			$i = 0;
 
 			if($htmlDOM->find('.subcat'))

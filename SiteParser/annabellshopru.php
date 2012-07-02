@@ -305,6 +305,7 @@ class annabellshopruParser extends ParserAbstract
 
 		$productList = array(); // Список продуктов.
 			$htmlDOM = $this->request($url);
+
 			$logFile = fopen(dirname(__FILE__).'/annabellshop.log', 'w');
 			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\n".'category>>> '.$url);
 			fclose($logFile);

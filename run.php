@@ -22,6 +22,6 @@ require_once dirname(__FILE__).'/Libs/simple_html_dom.php';
 require_once dirname(__FILE__).'/Libs/RollingCurl.php';
 //include "standalone.php";
 
-$Update1 = new UmiConverter(array('skazka16ru'));
+$Update1 = new UmiConverter(array('krokhotulkaru'));
 //$Update1->setProducts();
 ?>
