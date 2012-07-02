@@ -24,7 +24,11 @@ class ParserAbstract implements ParserInterface
 		 * Метод реализующий запрос с параметрами на сервер.
 		 * Возвращает результат file_get_html. т.е. Объект simple_html_dom.
 		 */
-		$url = 'http://'.$this->domainName.$urlParams;
+		$url = $urlParams;
+		if($urlParams{0} != '/'){
+			$url = '/'.$urlParams;
+		}
+		$url = 'http://'.$this->domainName.$url;
 		return file_get_html($url);
 	}
 

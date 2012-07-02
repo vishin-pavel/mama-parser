@@ -329,7 +329,11 @@ class annabellshopruParser extends ParserAbstract
 					if($td){
 						$a = $td[0]->find('a');
 						if(!preg_match("/garden_flypage.tpl/", $a[0]->href)){
-							$rc->get($this->domainName.$a[0]->href);
+							$link = $a[0]->href;
+							if($link{0} != '/'){
+								$link = '/'.$link;
+							}
+							$rc->get($this->domainName.$link);
 							$i++;
 						}
 					}
@@ -370,7 +374,7 @@ class annabellshopruParser extends ParserAbstract
 				$td = $tr[0]->find('td');
 				$imageUrl = $td[0]->find('.s5_vm_img'); $imageUrl = $imageUrl[0]->find('a'); $imageUrl = $imageUrl[0]->href;
 				$h1 = $htmlDOM->find('h1'); $h1 = $h1[0]->innertext;
-				$price = $tr[1]->find('.productPrice'); if(!$price[0]){exit($tr[1]->outertext);} $price = $price[0]->innertext; $price = trim($price);
+				$price = $tr[1]->find('.productPrice'); $price = $price[0]->innertext; $price = trim($price);
 				$description = $tr[3]->find('td'); $hr = $description[0]->find('hr'); $hr[0]->outertext = ''; $description = $description[0]->innertext;
 
 				$product = array(
