@@ -147,6 +147,8 @@ class UmiConverter extends ConverterAbstract
         );
 
         $annabellshopruData = $this->parser['annabellshopru']->getUrlList();
+        $skazka16ruData = $this->parser['skazka16ru']->getUrlList();
+        $krokhotulkaru = $this->parser['krokhotulkaru']->getUrlList();
 
 		// Таблица соответсвий разделов.
         $changeProductList = array(
@@ -170,17 +172,51 @@ class UmiConverter extends ConverterAbstract
                     'annabellshopru' => $annabellshopruData[1][2][8], // Японские подгузники MOONY Муни
                     'annabellshopru' => $annabellshopruData[8][0],    // Трикотаж Lucky child (Лаки Чайлд)
                     'annabellshopru' => $annabellshopruData[8][1],    // Трикотаж Лео
-                    'annabellshopru' => $annabellshopruData[8][2]    // Трикотаж Наша Мама
-
-
+                    'annabellshopru' => $annabellshopruData[8][2],    // Трикотаж Наша Мама
+                    'skazka16ru' => $skazka16ruData[4][0],            // Подгузники и пеленки для малышей
+                    'skazka16ru' => $skazka16ruData[4][1],            // Prokids Magic Tape
+                    'skazka16ru' => $skazka16ruData[4][2],            // SEALER
+                    'skazka16ru' => $skazka16ruData[4][3],             // Пеленки
+                    'skazka16ru' => $skazka16ruData[0][2],            // Песочники
+                    'skazka16ru' => $skazka16ruData[0][14],           // Для деток от 1 года
+                    'skazka16ru' => $skazka16ruData[0][15],           // Вязанные комбинезоны, комплекты
+                    'skazka16ru' => $skazka16ruData[0][16],           // Комбинезоны, боди
+                    'skazka16ru' => $skazka16ruData[0][17],           // Комплекты, Кофточки, распашонки, ползунки, чепчики
+                    'skazka16ru' => $skazka16ruData[0][20],           // Комплекты на выписку
+                    'skazka16ru' => $skazka16ruData[0][21],           // Лео-спорт
+                    'skazka16ru' => $skazka16ruData[0][24],           // Швейный трикотаж
+                    'skazka16ru' => $skazka16ruData[0][23],           // Халаты, полотенца, изделия из махры
+                    'skazka16ru' => $skazka16ruData[0][19],           // Коллекции Лео
+                    'skazka16ru' => $skazka16ruData[0][18],           // Зимняя
+                    'skazka16ru' => $skazka16ruData[0][12],           // Шапочки и шарфы
+                    'skazka16ru' => $skazka16ruData[0][5],            // Весна/Осень
+                    'skazka16ru' => $skazka16ruData[0][4],            // Белье, пижамки
+                    'skazka16ru' => $skazka16ruData[0][1],            // Летняя
+                    'krokhotulkaru' => $krokhotulkaru[0],             // Подгузники
+                    'krokhotulkaru' => $krokhotulkaru[1],             // Одежда
+                    'krokhotulkaru' => $krokhotulkaru[2]             // Конверты
                 ),
-                1 => array(),
-                2 => array()
+                1 => array(
+                    'skazka16ru' => $skazka16ruData[0][3],            // Футболки
+                    'skazka16ru' => $skazka16ruData[0][6],            // Водолазки, толстовки
+                    'skazka16ru' => $skazka16ruData[0][13],           // Джинсы
+                    'skazka16ru' => $skazka16ruData[0][22],           // Спортивные костюмы
+                ),
+                2 => array(
+                    'skazka16ru' => $skazka16ruData[0][0],            // Наряды
+                    'skazka16ru' => $skazka16ruData[0][7],            // Болеро
+                    'skazka16ru' => $skazka16ruData[0][8],            // Жакеты
+                    'skazka16ru' => $skazka16ruData[0][10],           // Леггинсы, Рейтузы, Гетры к платьям, пинетки
+                    'skazka16ru' => $skazka16ruData[0][11]            // Платья и туники
+
+                )
             ),
             1 => array(
                 0 => array(
                     'annabellshopru' => $annabellshopruData[5][4],     // Мобиле / Подвески / Дуги
-                    'annabellshopru' => $annabellshopruData[5][12]    // Развивающие коврики и центры
+                    'annabellshopru' => $annabellshopruData[5][12],    // Развивающие коврики и центры
+                    'skazka16ru' => $skazka16ruData[2][0],               // Детская мягкая сборная мебель
+                    'krokhotulkaru' => $krokhotulkaru[5],                 // Детская комната
                 ),
                 1 => array(
                     'annabellshopru' => $annabellshopruData[5][0],     // ВЕЛОСИПЕДЫ
@@ -191,16 +227,21 @@ class UmiConverter extends ConverterAbstract
                     'annabellshopru' => $annabellshopruData[5][6],     // Мягкие игрушки ZOOBIES
                     'annabellshopru' => $annabellshopruData[5][8],     // Песочные наборы / Машинки
                     'annabellshopru' => $annabellshopruData[5][9],     // Погремушки и прорезыватели
-                    'annabellshopru' => $annabellshopruData[5][13]     // ЭЛЕКТРОМОБИЛИ
-
+                    'annabellshopru' => $annabellshopruData[5][13],     // ЭЛЕКТРОМОБИЛИ
+                    'skazka16ru' => $skazka16ruData[2][1],               // Игры
+                    'krokhotulkaru' => $krokhotulkaru[8]                 // Играй и развивайся
                 ),
                 2 => array(
                     'annabellshopru' => $annabellshopruData[5][10],    // Развивающие игрушки
-                    'annabellshopru' => $annabellshopruData[5][11]    // Развивающие игрушки МЯКИШИ
+                    'annabellshopru' => $annabellshopruData[5][11],    // Развивающие игрушки МЯКИШИ
+                    'skazka16ru' => $skazka16ruData[2][2]              // Мягкие конструкторы
                 ),
-                3 => array(),
+                3 => array(
+                    'skazka16ru' => $skazka16ruData[2][3]              // Мягкий пол для детских, игровых комнат
+                ),
                 4 => array(
-                    'annabellshopru' => $annabellshopruData[5][7]      // Пазлы, книжки, настольные игры, лото, панно
+                    'annabellshopru' => $annabellshopruData[5][7],      // Пазлы, книжки, настольные игры, лото, панно
+                    'skazka16ru' => $skazka16ruData[2][4]               // Напольные игровые зоны (коврики-пазлы)
                 )
             ),
             2 => array(),
@@ -208,7 +249,9 @@ class UmiConverter extends ConverterAbstract
                 'annabellshopru' => $annabellshopruData[7][0],    // Для мытья посуды/игрушек/пола
                 'annabellshopru' => $annabellshopruData[7][1],    // Кондиционер для белья
                 'annabellshopru' => $annabellshopruData[7][2],    // Отбеливатели
-                'annabellshopru' => $annabellshopruData[7][3]    // Стиральные порошки
+                'annabellshopru' => $annabellshopruData[7][3],    // Стиральные порошки
+                'krokhotulkaru' => $krokhotulkaru[7],             // Детская бытовая химия
+                'krokhotulkaru' => $krokhotulkaru[11]             // Бытовая химия для всей семьи
             ),
             4 => array(
                 'annabellshopru' => $annabellshopruData[0][0],   // Крем
@@ -223,7 +266,9 @@ class UmiConverter extends ConverterAbstract
                 'annabellshopru' => $annabellshopruData[0][7],    // Гигиенические помады
                 'annabellshopru' => $annabellshopruData[6][0],    // Детские ванночки
                 'annabellshopru' => $annabellshopruData[6][1],    // Детские полотенца
-                'annabellshopru' => $annabellshopruData[6][2]    // Принадлежности для купания
+                'annabellshopru' => $annabellshopruData[6][2],    // Принадлежности для купания
+                'skazka16ru' => $skazka16ruData[7],                // Средства гигиены
+                'krokhotulkaru' => $krokhotulkaru[6]               // Купание и гигиена
             ),
             5 => array(
                 'annabellshopru' => $annabellshopruData[4][0],   // Аксессуары для мам
@@ -237,7 +282,16 @@ class UmiConverter extends ConverterAbstract
                 'annabellshopru' => $annabellshopruData[4][8][0],   // Вода для здоровья
                 'annabellshopru' => $annabellshopruData[4][8][1],   // Чаи и коктейли
                 'annabellshopru' => $annabellshopruData[4][9],   // Сбор и хранение грудного молока
-                'annabellshopru' => $annabellshopruData[4][10]   // Сумки - переноски
+                'annabellshopru' => $annabellshopruData[4][10],   // Сумки - переноски
+                'skazka16ru' => $skazka16ruData[1][0],            // Мамины помошники
+                'skazka16ru' => $skazka16ruData[1][1],             // Уборка дома
+                'skazka16ru' => $skazka16ruData[6],                 // СЛИНГИ, подушки для кормления
+                'skazka16ru' => $skazka16ruData[5],                  // Постельное белье
+                'skazka16ru' => $skazka16ruData[3],                   // Пледы, одеяла, конверты, подушки
+                'krokhotulkaru' => $krokhotulkaru[3],                 // Все для кормления
+                'krokhotulkaru' => $krokhotulkaru[9],                 // Все для мам и беременных
+                'krokhotulkaru' => $krokhotulkaru[10],                // Гигиена и косметика для мам и пап
+                'krokhotulkaru' => $krokhotulkaru[4]                  // Уход и здоровье
             )
         );
         $this->converting($changeProductList, $sectionList);
