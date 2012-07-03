@@ -38,7 +38,18 @@ class UmiConverter extends ConverterAbstract
 				$hierarchy = umiHierarchy::getInstance();
 				$parentId = $hierarchy->getIdByPath($section);
                 $name = $product['productName'];
+
                 $image = $product['productImage'];
+                $img = explode("/", $image);
+                $imageName = "./images/cms/data/".$img[count($img)-1];
+                if(copy($image, "./images/cms/data/".$imageName)){
+                    echo "Изображение товара залито";
+                }
+                else {
+                    echo "Изображение не залилось";
+                }
+                $image =  "./images/cms/data/".$imageName;
+
                 $descr = $product['productDescription'];
                 $price = $product['productPrice'];
 
