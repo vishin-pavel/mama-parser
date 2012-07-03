@@ -26,19 +26,18 @@ $parentElementId = $hierarchy->getIdByPath('/shop/odezhda/dlya_samyh_malenkih/')
 $sel = new umiSelection;
 $sel->addElementType($hierarchyTypeId); //Добавляет поиск по иерархическому типу
 $sel->addHierarchyFilter($parentElementId); //Устанавливаем поиск по разделу
-$sel->addPermissions(); //Говорим, что обязательно нужно учитывать права доступа
+//$sel->addPermissions(); //Говорим, что обязательно нужно учитывать права доступа
 
 //Получаем результаты
 $result = umiSelectionsParser::runSelection($sel); //Массив id объектов
 $total = umiSelectionsParser::runSelectionCounts($sel); //Количество записей
-
+$objects = umiObjectsCollection::getInstance();
 //Выводим список
-foreach($result as $userId) {
-    $objects = umiObjectsCollection::getInstance();
-    if($objects->delObject($userId)) {
-        echo "Объект #{$userId} удален.";
+foreach($result as $pageId) {
+    if($objects->delObject($pageId)) {
+        echo "Объект #{$pageId} удален.";
     } else {
-        echo "Удалить объект #{$userId} почему-то не получилось. Скорее всего, он вообще не существует.";
+        echo "Удалить объект #{$pageId} почему-то не получилось. Скорее всего, он вообще не существует.";
     }
 }
 echo "<hr />Всего удалено ", $total, " товаров";

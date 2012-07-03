@@ -71,6 +71,7 @@ class UmiConverter extends ConverterAbstract
                     $prod = $hierarchy->getElement($prodId);
                     if($name==$prod->getValue("h1")){
                         echo "Продукт {$name} уже существует, ";
+                        $prod->setValue("photo", $image);
                         if($descr!=$prod->getValue("description")){
                             echo "Описание продукта {$name} обнавлено, ";
                             $prod->setValue("description", $descr);
@@ -79,7 +80,6 @@ class UmiConverter extends ConverterAbstract
                         if($price!=$prod->getValue("price")){
                             echo "Цена продукта {$name} обнавлена. ";
                             $prod->setValue("price", $price);
-
                         }
                         $allRight=false;
                     }
@@ -102,6 +102,8 @@ class UmiConverter extends ConverterAbstract
                     $newElement = $hierarchy->getElement($newElementId);
                     if($newElement instanceof umiHierarchyElement)
                     {
+
+
                         //Заполним новую страницу свойствами
                         $newElement->setValue("title", $name);
                         $newElement->setValue("h1", $name);
