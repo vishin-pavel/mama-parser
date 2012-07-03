@@ -14,7 +14,7 @@ class UmiConverter extends ConverterAbstract
 	}
 
 
-    private function convert($productList, $section, $parserName)
+    private function convert($productList, $section, $parserName, $ParsOrNot)
 	{
 		// @param Url каталога любого сайта
 		// @param Url каталога сайта mamakupi
@@ -26,7 +26,12 @@ class UmiConverter extends ConverterAbstract
         $hierarchyType = $hierarchyTypes->getTypeByName("catalog", "object");
         $hierarchyTypeId = $hierarchyType->getId();
 
-		$parsedProductList = $this->parser[$parserName]->parsingPageList($productList);
+        if($ParsOrNot){
+            $parsedProductList = $this->parser[$parserName]->parsingPageList($productList);
+        }
+		else {
+            $parsedProductList = $productList;
+        }
 
 		foreach($parsedProductList as $product){
 			if(count($product)>0){
@@ -110,19 +115,29 @@ class UmiConverter extends ConverterAbstract
 		}
 	}
 
-	private function converting($changeProductList, $section)
+	private function converting($changeProductList, $sectionList, $ParsOrNot)
 	{
 			foreach($changeProductList as $parserName => $url)
 			{
-				if(is_string($url)){
-					$this->convert($url, $section, $parserName);
-				}else if(is_array($url)){
-					$this->converting($url, $section[$parserName]);
-				}
+				if($ParsOrNot){
+                    if(is_string($url)){
+                        $this->convert($url, $sectionList, $parserName, $ParsOrNot);
+                    }else if(is_array($url)){
+                        $this->converting($url, $sectionList[$parserName], $ParsOrNot);
+                    }
+                }
+                else {
+                    if($url["productName"]){
+                        $this->convert($url, $sectionList, $parserName, $ParsOrNot);
+                    }
+                    else {
+                        $this->converting($url, $sectionList[$parserName], $ParsOrNot);
+                    }
+                }
 			}
 	}
 
-	public function setProducts()
+	public function setProducts($ParsOrNot)
 	{
         $sectionList = array(
             0 => array(
@@ -146,9 +161,18 @@ class UmiConverter extends ConverterAbstract
             5 => '/shop/tovary_dlya_mam_i_pap/'
         );
 
-        $annabellshopruData = $this->parser['annabellshopru']->getUrlList();
-        $skazka16ruData = $this->parser['skazka16ru']->getUrlList();
-        $krokhotulkaru = $this->parser['krokhotulkaru']->getUrlList();
+//Парсить или нет...........................................................................................................................
+        if($ParsOrNot){
+            $annabellshopruData = $this->parser['annabellshopru']->getUrlList();
+            $skazka16ruData = $this->parser['skazka16ru']->getUrlList();
+            $krokhotulkaru = $this->parser['krokhotulkaru']->getUrlList();
+        }
+        else {
+            $annabellshopruData = $this->parser['annabellshopru']->getData();
+            $skazka16ruData = $this->parser['skazka16ru']->getData();
+            $krokhotulkaru = $this->parser['krokhotulkaru']->getData();
+        }
+//Парсить или нет...........................................................................................................................
 
 		// Таблица соответсвий разделов.
         $changeProductList = array(
@@ -294,6 +318,6 @@ class UmiConverter extends ConverterAbstract
                 'krokhotulkaru' => $krokhotulkaru[4]                  // Уход и здоровье
             )
         );
-        $this->converting($changeProductList, $sectionList);
+        $this->converting($changeProductList, $sectionList, $ParsOrNot);
     }
 }
