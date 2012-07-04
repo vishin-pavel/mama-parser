@@ -12,6 +12,8 @@ class ParserAbstract implements ParserInterface
 	*/
 	protected $products = array();
 	protected $domainName;
+	protected $recordCount = 0;
+	protected $urlList;
 
 	public function __construct()
 	{
@@ -35,6 +37,27 @@ class ParserAbstract implements ParserInterface
 	public function getData()
 	{
 		return $this->products;
+	}
+
+	protected function countUrl($urlList)
+	{
+		// Рассчитывается сколько урлов есть вообще.
+		foreach($urlList as $url)
+		{
+			if(is_string($url))
+			{
+				$this->recordCount++;
+			}
+			else if(is_array($url))
+			{
+				$this->countUrl($url);
+			}
+		}
+	}
+
+	public function getUrlList()
+	{
+		return $this->urlList;
 	}
 }
 ?>

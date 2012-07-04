@@ -1,11 +1,6 @@
 <?php
 class annabellshopruParser extends ParserAbstract
 {
-	/**
-	 * Массив адресов.
-	 */
-	private $urlList;
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -48,7 +43,7 @@ class annabellshopruParser extends ParserAbstract
 					7 => '/our-shop.html?page=shop.browse&amp;category_id=213', // Японские подгузники MERRIES Мериес
 					8 => '/our-shop.html?page=shop.browse&amp;category_id=212' // Японские подгузники MOONY Муни
 				)
-			),
+			));/*,
 			2 => array( // ДЕТСКОЕ ПИТАНИЕ
 				0 => '/our-shop.html?page=shop.browse&amp;category_id=81', // Детская вода
 				1 => array( // Детские каши
@@ -238,12 +233,9 @@ class annabellshopruParser extends ParserAbstract
 				1 => '/our-shop.html?page=shop.browse&category_id=274', // Трикотаж Лео
 				2 => '/our-shop.html?page=shop.browse&category_id=235', // Трикотаж Наша Мама
 			)
-		);
+		);*/
 
-		$this->countUrl($this->urlList);
-
-		//$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
-		//$this->products = eval($logFile);  // = $this->getParsedUrlList($this->urlList);
+		//$this->countUrl($this->urlList);
 
 		//$arr = $this->getParsedUrlList($this->urlList);
 
@@ -254,29 +246,9 @@ class annabellshopruParser extends ParserAbstract
 		//$logFile = fopen(dirname(__FILE__).'/annabellshop.array', 'w');
 		//fwrite($logFile, $arr1);
 		//fclose($logFile);
-	}
 
-	public function getUrlList()
-	{
-		return $this->urlList;
-	}
-
-	// execute after develop
-	private function countUrl($urlList)
-	{
-		// Рассчитывается сколько урлов есть вообще.
-		for($i = 0; $i < count($urlList); $i++)
-		{
-			$url = $urlList[$i];
-			if(is_string($url))
-			{
-				$this->recordCount++;
-			}
-			else if(is_array($url))
-			{
-				$pageList[$i] = $this->countUrl($url);
-			}
-		}
+		$logFile = file_get_contents( dirname(__FILE__).'/annabellshop.array' );
+		$this->products = eval($logFile);
 	}
 
 	private function getParsedUrlList($urlList)
@@ -304,12 +276,12 @@ class annabellshopruParser extends ParserAbstract
 		// @param url параметры ссылки на веб страницу
 
 		$productList = array(); // Список продуктов.
-			$htmlDOM = $this->request($url);
 
 			$logFile = fopen(dirname(__FILE__).'/annabellshop.log', 'w');
 			fwrite($logFile, ++$this->currentRecord .' of '. $this->recordCount ."\n".'category>>> '.$url);
 			fclose($logFile);
-            exit($htmlDOM->outertext);
+
+			$htmlDOM = $this->request($url);
 			$vmMainPage = $htmlDOM->find('#vmMainPage');
 			$div = $vmMainPage[0]->find('div'); $div = $div[2];
 			if($div->find('ul')){ $ul = $div->find('ul'); $ul[0]->outertext = '';}
@@ -386,10 +358,6 @@ class annabellshopruParser extends ParserAbstract
 				);
 			}
 
-
-			unset($htmlDOM);
-
 		return $product;
 	}
 }
-?>

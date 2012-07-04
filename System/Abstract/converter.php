@@ -11,9 +11,8 @@ class ConverterAbstract implements ConverterInterface
 		}
 	}
 
-	public function setProducts()
+	public function setProducts($ParsOrNot)
 	{
-		
+
 	}
 }
-?>

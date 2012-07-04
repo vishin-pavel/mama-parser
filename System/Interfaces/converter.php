@@ -1,6 +1,6 @@
 <?php
 interface ConverterInterface
 {
-	public function setProducts();
+	public function setProducts($ParsOrNot);
 }
 ?>

@@ -62,7 +62,7 @@ class skazka16ruParser extends ParserAbstract
 			6 => '/index.php?categoryID=118', // СЛИНГИ, подушки для кормления
 			7 => '/index.php?categoryID=109' // Средства гигиены
 		);
-		$this->countUrl($this->urlList);
+		//$this->countUrl($this->urlList);
 /*
 		$arr = $this->getParsedUrlList($this->urlList);
 
@@ -74,6 +74,8 @@ class skazka16ruParser extends ParserAbstract
 		fwrite($logFile, $arr1);
 		fclose($logFile);
  */
+		$logFile = file_get_contents(dirname(__FILE__).'/skazka16.array');
+		$this->products = eval($logFile);
 	}
 
 	// TODO: execute after develop
