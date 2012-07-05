@@ -16,6 +16,7 @@ class UmiConverter extends ConverterAbstract
 
     private function convert($productList, $section, $parserName, $ParsOrNot)
 	{
+
 		// @param Url каталога любого сайта
 		// @param Url каталога сайта mamakupi
 		// @param Имя парсера
